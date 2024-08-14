@@ -1,58 +1,80 @@
-
 import { useState } from "react";
+import {FaTrashAlt} from "react-icons/fa";
 const Content = () => {
-  // name = current state
-  // setName = updated state
-  // useState('Darwin) = default state
- const [name, setName] = useState('Darwin');
- const [count, setcount] = useState(0);
- const [cityName, setCityName] = useState('Tabriz');
+ const [items, setItems] = useState(
+  [
+    {
+      id: 1,
+      checked: true,
+      item: "Apple"
+    },
 
- const handleCityNames = () => {
-  const cities = ['Tabriz', 'Tehran', 'Masal', 'Urmiyah'];
-  const index = Math.floor(Math.random() * 4)
-  setCityName(cities[index]);
- }
-  const handleRandomNames = () => {
-    const name = ['Jamie', 'Dwayne', 'Chris'];
-    const int = Math.floor(Math.random() * 3);
-    setName(name[int]);
+    {
+      id: 2,
+      checked: false,
+      item: "Orange"
+    },
+
+    {
+      id: 3,
+      checked: false,
+      item: "Banana"
+    },
+  ]);
+
+  // Here map is a higher order function which takes a callback function as an argument, higher order function either take a function as an argument or return a function as its result 
+
+
+  const handleCheck = (id) => {
+    const dynamicItems = items.map((item) => (
+      item.id === id ? {...item, checked: !item.checked} : item
+    ))
+    setItems(dynamicItems);
+    localStorage.setItem('shoppingList', JSON.stringify(dynamicItems));
   }
 
-  // setCount is asynchronous so logging the value of count happens before the update that's why we first see 0 value in terminal when clicking 
-  const handleClick = () => {
-    setcount(count + 1);
-    console.log(count);
+  const handleDelete = (id) => {
+    const dynamicItems = items.filter((item) => 
+    item.id !== id
+    )
+    setItems(dynamicItems);
+    localStorage.setItem('shoppingList' , JSON.stringify(dynamicItems));
   }
-
-  const handleClick2 = (name) => {
-    console.log(`${name} was clicked`);
-  }
-  const handleClick3 = (e) => {
-    console.log(e.target.innerText);
-  }
-
+  
   return (
     <main>
-      <p>
-        Hello {name}
-      </p>
+    {items.length ? ( 
+     <ul>
+      {
+        items.map((item) => (
+          <li className="item" key={item.id}>
+            
+          <input
+          type="checkbox"
+          checked={item.checked}
+          onChange={() => handleCheck(item.id)}
+          />
 
-      <p>
-        City: {cityName}
-      </p>
-      {/* 
-      - If we put the operators (), the function gets called immediately without clicking the button
-      - Anonymous function () => {} only gets called after the onclick and function inside which is handleClick2('Hulk')immediately gets called.
-      */}
-      <button onClick={handleCityNames}>City names</button>
-      <button onClick={handleClick}>Click</button>
-      <button onClick={handleRandomNames}>Change name</button>
-      <button onClick={() => handleClick2('Hulk')}>Click</button>
-      {/* Acceessing event object when clicking event */}
-      <button onClick={(e) => handleClick3(e)}>Click</button>
+          <label
+          style={item.checked ? {textDecoration: 'line-through'} : null}
+          onDoubleClick = {() => handleCheck(item.id)}
+          >{item.item}
+          </label>
+
+          <FaTrashAlt 
+          onClick={() => handleDelete(item.id)}
+          role="button"
+          tabIndex="0"/>
+          </li>
+        ))
+      }
+     </ul> 
+    ) : (
+      <p style={{marginTop: '2rem'}}>List is empty</p>
+    )}
     </main>
   )
 }
+
 
 export default Content
