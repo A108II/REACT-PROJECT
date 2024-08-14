@@ -1,7 +1,9 @@
-const Footer = () => {
-  const time = new Date();
+const Footer = ({length}) => {
+
   return (
-    <footer>&copy; Copyright {time.getFullYear()}</footer>
+    <footer>
+     <p>{length} List {length === 1 ? "item" : "items"}</p> 
+      </footer>
   )
 }
 
