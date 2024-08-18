@@ -14,7 +14,7 @@ const AddItem = ({newItem, setNewItem, handleSubmit}) => {
       ref = {inputRef}
       type="text"
       id="addItem"
-      placeholder="Add item"
+      placeHolder="Add item"
       value = {newItem}
       onChange={(e) => setNewItem(e.target.value)}
       // The value={newItem} and onChange={(e) => setNewItem(e.target.value)} together create a controlled input, making the state (newItem) the single source of truth. The input value being directly connected to the state ensures that both are always in sync. This consistent relationship between the input and the state is why we refer to the state as the "single source of truth." Any changes made to the input are immediately reflected in the state, maintaining a clear, centralized control over the data.
