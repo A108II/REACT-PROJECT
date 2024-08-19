@@ -1,7 +1,7 @@
 import ListItems from "./listItems";
 const Content = ({ items, handleCheck, handleDelete }) => {
   return (
-    <main>
+    <> 
     { items.length ? 
     ( 
      <ListItems
@@ -10,7 +10,10 @@ const Content = ({ items, handleCheck, handleDelete }) => {
      handleDelete = {handleDelete}
      />
     ) : (<p style={{marginTop: '2rem'}}>List is empty</p>)}
-    </main>
+    </>
     )}
 
 export default Content
+
+// <> </> are called react fragments They allow to group multiple elements without adding an extra node to the DOM.
+

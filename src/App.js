@@ -6,21 +6,38 @@ import Footer from './footer';
 import AddItem from './addItem';
 
 function App() {
+  const API_URL = 'http://localhost:3500/items';
 
-  const [items, setItems] = useState(
-    JSON.parse(localStorage.getItem('shoppingList')) || []);
-    // [] causes the application to work smoothly and provide intial array for a new user to interact with
+  const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
   const [search, setSearch] = useState('');
-
-  // Everytime component renders, useEffect will run by default, but if we add [](empty dependency array) as dependency it runs once at load times, useEffect() is an asynchronous function 
-  // useEffect(() => {
-  //   console.log('Inside useEffect');
-  // }, [items]);
+  const [fetchError, setFetchError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('shoppingList', JSON.stringify(items));
-  },[items])
+    const fetchItems = async () => {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw Error(
+          'Did Not Receive Expected Data'
+        )
+        const listItems = await response.json();
+        setItems(listItems);
+        setFetchError(null);
+      }
+
+      catch (err) {
+        setFetchError(err.message);
+      }
+      // Setting loading to false after page loads successfully
+      finally {
+        setIsLoading(false);
+      }
+    }
+    setTimeout(() => {
+      fetchItems()
+    }, 2000)
+  }, [])
 
   const addItem = (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
@@ -44,8 +61,8 @@ function App() {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page reload
-    if (!newItem) return; // If newItem is not provided then exit
+    e.preventDefault();
+    if (!newItem) return;
     addItem(newItem);
     setNewItem('');
   }
@@ -65,14 +82,23 @@ function App() {
         setSearch={setSearch}
       />
 
-      <Content
-        items={items.filter((item) => (
-          ((item.item).toLowerCase()).includes((search).toLowerCase())
-        ))}
+      <main>
+        {isLoading && <p>Loading ...</p>}
+        {fetchError && <p style={{
+          color: 'red',
+          fontWeight: 800,
+        }}>{`Error: ${fetchError}`}</p>}
 
-        handleCheck={handleCheck}
-        handleDelete={handleDelete}
-      />
+        {!fetchError && !isLoading && <Content
+          items={items.filter((item) => (
+            ((item.item).toLowerCase()).includes((search).toLowerCase())
+          ))}
+
+          handleCheck={handleCheck}
+          handleDelete={handleDelete}
+        />
+        }
+      </main>
 
       <Footer length={items.length} />
     </div>
