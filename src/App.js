@@ -17,15 +17,15 @@ function App() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-      const response = await fetch(API_URL);
-      if(!response.ok) {
-        throw Error('Could not access to resources');
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw Error('Could not access to resources');
+        }
+        const listItems = await response.json(); // parsing to javascript object
+        setItems(listItems);
+        setFetchError(null)
       }
-      const listItems = await response.json();
-      setItems(listItems);
-      setFetchError(null)
-      }
-      catch(err) {
+      catch (err) {
         setFetchError(err.message);
       }
 
@@ -46,14 +46,14 @@ function App() {
 
     const postOptions = {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-type': 'application/json'
       },
       body: JSON.stringify(myNewItem)
     };
-    
+
     const result = await apiRequest(API_URL, postOptions);
-    if(result) setFetchError(result);
+    if (result !== null) setFetchError(result);
   }
 
   const handleCheck = async (id) => {
@@ -69,11 +69,11 @@ function App() {
       headers: {
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({checked: selectedItems[0].checked})
+      body: JSON.stringify({ checked: selectedItems[0].checked })
     }
     const reqUrl = `${API_URL}/${id}`;
     const result = await apiRequest(reqUrl, updateOptions);
-    if(result) setFetchError(result);
+    if (result !== null) setFetchError(result);
   }
 
   const handleDelete = async (id) => {
@@ -87,7 +87,7 @@ function App() {
     }
     const reqUrl = `${API_URL}/${id}`;
     const result = await apiRequest(reqUrl, deleteOptions);
-    if(result) setFetchError(result);
+    if (result) setFetchError(result);
   }
 
   const handleSubmit = (e) => {
@@ -136,6 +136,3 @@ function App() {
 }
 
 export default App;
-
-
-// npx json-server -p 3500 -w data/db.json: -p:port, -w:watch to start a json server

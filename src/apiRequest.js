@@ -1,10 +1,10 @@
 const apiRequest = async (url, optionsObj, errMessage = null) => {
   try {
     const response = await fetch(url, optionsObj);
-    if(!response) {
+    if (!response) {
       throw Error('Could not handle the request, try again!');
     }
-  } catch(err) {
+  } catch (err) {
     errMessage = err.message;
   }
   finally {

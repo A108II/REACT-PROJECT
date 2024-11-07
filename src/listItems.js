@@ -6,10 +6,10 @@ const ListItems = ({ items, handleCheck, handleDelete }) => {
     <ul>
       {items.map((item) => (
         <LineItem
-        key = {item.id}
-        item = {item}
-        handleCheck = {handleCheck}
-        handleDelete = {handleDelete}
+          key={item.id}
+          item={item}
+          handleCheck={handleCheck}
+          handleDelete={handleDelete}
         />
       ))}
     </ul>
